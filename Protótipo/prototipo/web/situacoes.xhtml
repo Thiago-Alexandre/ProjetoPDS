@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <h:head />
+    <h:body>
+        <header id="cabecalho">
+            <h:form id="formCabecalho">
+                <p:outputLabel value="Protótipo"/>
+                <br></br><br></br>
+                <p:outputLabel value="Usuário Atual: "/>
+                <p:outputLabel value="#{usuarioLogado.getNome()}"/>
+                <br></br><br></br>
+            </h:form>
+        </header>
+        <nav id="menu">
+            <p:fieldset legend="Menu">
+                <h:form id="formMenu">
+                    <p:menubar>
+                        <p:menuitem value="Início" action="#{beanRedirecionador.irHome()}" />
+                    </p:menubar>
+                </h:form> 
+            </p:fieldset>
+        </nav>
+        <main id="conteudo">
+            <p:fieldset legend="Situações de Patrimônios">
+                <h:form id="formSalva">
+                    <p:fieldset legend="Informações:">
+                        <h:inputHidden value="#{beanSituacao.situacao.id}"/>
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="ID:" for="id"/>
+                            <p:inputText id="id" maxlength="10" readonly="true" value="#{beanSituacao.situacao.id}"/>
+                            <p:outputLabel value="Nome:" for="nome"/>
+                            <p:inputText id="nome" maxlength="30" required="true" value="#{beanSituacao.situacao.nome}"/>
+                            <p:commandButton value="Salvar" action="#{beanSituacao.salvar()}" 
+                                    process=":formSalva" update=":formSalva :formLista"/>
+                            <p:commandButton value="Excluir" action="#{beanSituacao.excluir()}" 
+                                    process=":formSalva" update=":formSalva :formLista"/>
+                            <p:outputLabel value="Não será possível excluir! Outros registros dependem dessa Situação!" 
+                                rendered="#{exclusaoNaoPermitida != null}"/>
+                        </h:panelGrid>
+                    </p:fieldset>
+                </h:form>
+                <h:form id="formLista">
+                    <p:fieldset legend="Situações:">
+                        <h:panelGrid columns="3">
+                            <p:outputLabel value="Nome:" for="nomeConsulta"/>
+                            <p:inputText id="nomeConsulta" maxlength="30" value="#{beanSituacao.situacao.nome}"/>
+                            <p:commandButton value="Pesquisar" action="#{beanSituacao.listar}" 
+                                    process=":formLista" update=":formSalva :formLista"/>
+                        </h:panelGrid>
+                        <p:dataTable id="situacoes" var="x" value="#{beanSituacao.situacoes}" paginator="true" rows="20" 
+                                     lazy="false" selectionMode="single" selection="#{x}" rowKey="#{x.id}">
+                            <p:ajax event="rowSelect" listener="#{beanSituacao.onRowSelect}" update=":formSalva" />
+                            <p:column headerText="Id">
+                                <h:outputText value="#{x.id}" />
+                            </p:column>
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{x.nome}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:fieldset>
+                </h:form>        
+            </p:fieldset>
+        </main>
+        <footer id="rodape">
+            <h3>Protótipo Sistema Patrimonial - Thiago Alexandre Buerger</h3>
+        </footer>
+    </h:body> 
+</html>

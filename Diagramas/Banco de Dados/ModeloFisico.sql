@@ -1,0 +1,178 @@
+DROP DATABASE if EXISTS inventario;
+CREATE DATABASE inventario CHARSET latin1 COLLATE latin1_general_cs;
+USE inventario;
+
+CREATE TABLE Tipo_Usuario (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Usuario (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	login VARCHAR(20) NOT NULL,
+	nome VARCHAR(50) NOT NULL,
+	senha VARCHAR(15) NOT NULL,
+	tipo INTEGER NOT NULL,
+	FOREIGN KEY (tipo) REFERENCES Tipo_Usuario(id)
+);
+
+CREATE TABLE Tipo_Aquisicao (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Aquisicao (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	datahora DATETIME NOT NULL,
+	detalhes VARCHAR(100) NOT NULL,
+	valorTotal DECIMAL(8,2) NOT NULL,
+	tipo INTEGER NOT NULL,
+	usuario INTEGER NOT NULL,
+	FOREIGN KEY (tipo) REFERENCES Tipo_Aquisicao(id),
+	FOREIGN KEY (usuario) REFERENCES Usuario(id)
+);
+
+CREATE TABLE Tipo_Material (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Fornecedor (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Especificacao (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(30) NOT NULL,
+	quantidadeEstoque DECIMAL(8,2) NOT NULL
+);
+
+CREATE TABLE Filial (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Responsavel (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Setor (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(30) NOT NULL,
+	filial INTEGER NOT NULL,
+	responsavel INTEGER NOT NULL,
+	FOREIGN KEY (filial) REFERENCES Filial(id),
+	FOREIGN KEY (responsavel) REFERENCES Responsavel(id)
+);
+
+CREATE TABLE Situacao (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Patrimonio (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	tombamento VARCHAR(20) NOT NULL,
+	vidaUtil INTEGER NOT NULL,
+	ativo BOOLEAN NOT NULL,
+	situacao INTEGER NOT NULL,
+	setor INTEGER NOT NULL,
+	FOREIGN KEY (situacao) REFERENCES Situacao(id),
+	FOREIGN KEY (setor) REFERENCES Setor(id)
+);
+
+CREATE TABLE Material (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	descricao VARCHAR(100) NOT NULL,
+	valorAquisicao DECIMAL(8,2) NOT NULL,
+	quantidadeAquisicao DECIMAL(8,2) NOT NULL,
+	prazoGarantia DATETIME,
+	tipo INTEGER NOT NULL,
+	especificacao INTEGER NOT NULL,
+	fornecedor INTEGER NOT NULL,
+	aquisicao INTEGER NOT NULL,
+	patrimonio INTEGER,
+	FOREIGN KEY (tipo) REFERENCES Tipo_Material(id),
+	FOREIGN KEY (especificacao) REFERENCES Especificacao(id),
+	FOREIGN KEY (fornecedor) REFERENCES Fornecedor(id),
+	FOREIGN KEY (aquisicao) REFERENCES Aquisicao(id),
+	FOREIGN KEY (patrimonio) REFERENCES Patrimonio(id)
+);
+
+CREATE TABLE Tipo_Baixa (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Baixa (
+	id INTEGER PRIMARY KEY NOT NULL,
+	datahora DATETIME NOT NULL,
+	detalhes VARCHAR(100) NOT NULL,
+	material INTEGER NOT NULL,
+	tipo INTEGER NOT NULL,
+	usuario INTEGER NOT NULL,
+	FOREIGN KEY (material) REFERENCES Material(id),
+	FOREIGN KEY (tipo) REFERENCES Tipo_Baixa(id),
+	FOREIGN KEY (usuario) REFERENCES Usuario(id)
+);
+
+CREATE TABLE Tipo_Movimentacao (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Movimentacao (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	datahora DATETIME NOT NULL,
+	detalhes VARCHAR(100) NOT NULL,
+	quantidade DECIMAL(8,2) NOT NULL,
+	material INTEGER NOT NULL,
+	tipo INTEGER NOT NULL,
+	setorAntigo INTEGER NOT NULL,
+	setorNovo INTEGER NOT NULL,
+	usuario INTEGER NOT NULL,
+	FOREIGN KEY (material) REFERENCES Material(id),
+	FOREIGN KEY (tipo) REFERENCES Tipo_Movimentacao(id),
+	FOREIGN KEY (setorAntigo) REFERENCES Setor(id),
+	FOREIGN KEY (setorNovo) REFERENCES Setor(id),
+	FOREIGN KEY (usuario) REFERENCES Usuario(id)
+);
+
+CREATE TABLE Inventario (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	datahora DATETIME NOT NULL,
+	usuario INTEGER NOT NULL,
+	FOREIGN KEY (usuario) REFERENCES Usuario(id)
+);
+
+CREATE TABLE Item (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	ativo BOOLEAN NOT NULL,
+	material INTEGER NOT NULL,
+	setor INTEGER NOT NULL,
+	situacao INTEGER NOT NULL,
+	inventario INTEGER NOT NULL,
+	FOREIGN KEY (material) REFERENCES Material(id),
+	FOREIGN KEY (setor) REFERENCES Setor(id),
+	FOREIGN KEY (situacao) REFERENCES Situacao(id),
+	FOREIGN KEY (inventario) REFERENCES Inventario(id)
+);
+
+CREATE TABLE Alteracao (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	detalhes VARCHAR(100) NOT NULL,
+	ativo BOOLEAN NOT NULL,
+	material INTEGER NOT NULL,
+	setor INTEGER NOT NULL,
+	situacao INTEGER NOT NULL,
+	inventario INTEGER NOT NULL,
+	FOREIGN KEY (material) REFERENCES Material(id),
+	FOREIGN KEY (setor) REFERENCES Setor(id),
+	FOREIGN KEY (situacao) REFERENCES Situacao(id),
+	FOREIGN KEY (inventario) REFERENCES Inventario(id)
+);
+
+INSERT INTO Tipo_Usuario(nome) VALUES ('Administrador');
+INSERT INTO Usuario(login, nome, senha, tipo) VALUES ('admin','Thiago','123',1);

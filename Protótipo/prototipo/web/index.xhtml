@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <h:head />
+    <h:body>
+        <header id="cabecalho">
+            <h:form>
+                <h:panelGrid columns="4">
+                    <p:outputLabel value="Protótipo"/>
+                    <p:outputLabel value="                                      "/>
+                    <p:outputLabel value="Usuário Atual: "/>
+                    <p:outputLabel value="#{usuarioLogado.getNome()}"/>
+                </h:panelGrid>
+            </h:form>
+        </header>
+        <nav id="menu">
+            <p:fieldset legend="Menu">
+                <h:panelGrid columns="2">
+                    <h:form id="formMenu">
+                        <p:menubar>
+
+                            <p:submenu label="Novo">
+                                <p:menuitem value="Aquisição" action="#{beanRedirecionador.novaAquisicao()}" />
+                                <p:menuitem value="Baixa" action="#{beanRedirecionador.novaBaixa()}" />
+                                <p:menuitem value="Inventário" action="#{beanRedirecionador.novoInventario()}" />
+                                <p:menuitem value="Movimentação" action="#{beanRedirecionador.novaMovimentacao()}" />
+                            </p:submenu>
+
+                            <p:menuitem value="Aquisições" action="#{beanRedirecionador.verAquisicoes()}" />
+                            <p:menuitem value="Baixas" action="#{beanRedirecionador.verBaixas()}" />
+                            <p:menuitem value="Inventários" action="#{beanRedirecionador.verInventarios()}" />
+                            <p:menuitem value="Movimentações" action="#{beanRedirecionador.verMovimentacoes()}" />
+
+                            <p:submenu label="Outros">
+
+                                <p:submenu label="Material">
+                                    <p:menuitem value="Materiais" action="#{beanRedirecionador.verMateriais()}" />
+                                    <p:menuitem value="Fornecedores" action="#{beanRedirecionador.verFornecedores()}" />
+                                    <p:menuitem value="Especificações" action="#{beanRedirecionador.verEspecificacoes()}" />
+                                    <p:menuitem value="Situações" action="#{beanRedirecionador.verSituacoes()}" />
+                                    <p:menuitem value="Tipos" action="#{beanRedirecionador.verTiposMaterial()}" />
+                                </p:submenu>
+
+                                <p:submenu label="Setor">
+                                    <p:menuitem value="Setores" action="#{beanRedirecionador.verSetores()}" />
+                                    <p:menuitem value="Filiais" action="#{beanRedirecionador.verFiliais()}" />
+                                    <p:menuitem value="Responsáveis" action="#{beanRedirecionador.verResponsaveis()}" />
+                                </p:submenu>
+
+                                <p:submenu label="Tipos">
+                                    <p:menuitem value="Aquisição" action="#{beanRedirecionador.verTiposAquisicao()}" />
+                                    <p:menuitem value="Baixa" action="#{beanRedirecionador.verTiposBaixa()}" />
+                                    <p:menuitem value="Movimentação" action="#{beanRedirecionador.verTiposMovimentacao()}" />
+                                    <p:menuitem value="Usuário" action="#{beanRedirecionador.verTiposUsuario()}" />
+                                </p:submenu>
+
+                            </p:submenu>
+
+                            <p:menuitem value="Usuários" action="#{beanRedirecionador.verUsuarios()}" />
+                            <p:menuitem value="Perfil" action="#{beanRedirecionador.verPerfil()}" />
+                            <p:menuitem value="Logout" action="#{beanRedirecionador.deslogar()}"/>
+
+                        </p:menubar>
+                    </h:form>        
+                </h:panelGrid>
+            </p:fieldset>
+        </nav>
+        <main id="conteudo">
+            <h1>Sistema de Controle Patrimonial</h1>
+        </main>
+        <footer id="rodape">
+            <h3>Protótipo Sistema Patrimonial - Thiago Alexandre Buerger</h3>
+        </footer>
+    </h:body>
+</html>

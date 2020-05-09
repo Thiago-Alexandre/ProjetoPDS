@@ -1,0 +1,51 @@
+package util;
+
+import java.io.IOException;
+import javax.faces.context.FacesContext;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+
+@WebFilter(urlPatterns="/*")
+public class OpenSessionAndTransactionInView implements Filter{
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        System.out.println("Filter iniciado");
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        
+        //EntityManager em = JPAUtil.getEntityManager();
+        //EntityTransaction tx = em.getTransaction();
+        try {
+            System.out.println("doFilter aberto");
+            //tx.begin();
+            chain.doFilter(request, response);
+            //tx.commit();
+            System.out.println("doFilter faz algo");
+        } catch (Exception e) {
+            /*if(tx != null && tx.isActive()){
+                tx.rollback();
+            }*/
+        }
+        finally {
+            System.out.println("doFilter fecha");
+            //em.close();
+        }
+    }
+
+    @Override
+    public void destroy() {
+        
+        JPAUtil.closeEntityManagerFactory();
+        System.out.println("Filter fechado");
+    }
+}

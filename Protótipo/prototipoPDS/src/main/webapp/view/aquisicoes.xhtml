@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/templates/basicoTemplate.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+ 
+    <ui:define name="conteudo">
+        <h:form id="formFiltro">
+            <p:fieldset legend="Filtros:">
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="De:" for="dataInicial"/>
+                    <p:calendar id="dataInicial" value="#{beanAquisicoes.filtro.dataInicial}" pattern="yyyy-MM-dd" timeZone="GMT-3" mask="true">
+                        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="GMT-3"/>
+                    </p:calendar>
+                    <p:outputLabel value="Até:" for="dataFinal"/>
+                    <p:calendar id="dataFinal" value="#{beanAquisicoes.filtro.dataFinal}" pattern="yyyy-MM-dd" timeZone="GMT-3" mask="true">
+                        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="GMT-3"/>
+                    </p:calendar>
+                    <p:outputLabel for="forma" value="Forma de Aquisição:" />
+                    <p:selectOneMenu value="#{beanAquisicoes.filtro.forma}" id="forma" filter="true" filterMatchMode="startsWith">
+                        <f:selectItems value="#{beanAquisicoes.formas}" var="formaFiltro" itemLabel="#{formaFiltro.nome}" itemValue="#{formaFiltro.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="usuario" value="Usuário:" />
+                    <p:selectOneMenu value="#{beanAquisicoes.filtro.usuario}" id="usuario" filter="true" filterMatchMode="startsWith">
+                        <f:selectItems value="#{beanAquisicoes.usuarios}" var="usuarioFiltro" itemLabel="#{usuarioFiltro.nome}" itemValue="#{usuarioFiltro.id}" />
+                    </p:selectOneMenu>
+                    <p:commandButton value="Pesquisar" process=":formFiltro" update=":formLista"/>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+        <h:form id="formLista">
+            <p:fieldset legend="Aquisições Cadastradas:">
+                <p:dataTable id="aquisicoes" var="x" value="#{beanAquisicoes.aquisicoes}"  rows="5" lazy="true" 
+                             paginator="true" emptyMessage="Nenhuma Aquisição Encontrada!">
+                    <p:column headerText="Data">
+                        <h:outputText value="#{x.data}" />
+                    </p:column>
+                    <p:column headerText="Forma">
+                        <h:outputText value="#{x.forma.nome}" />
+                    </p:column>
+                    <p:column headerText="Valor Total">
+                        <h:outputText value="#{x.valorTotal}" />
+                    </p:column>
+                    <p:column headerText="Usuário">
+                        <h:outputText value="#{x.usuario.nome}" />
+                    </p:column>
+                    <p:column headerText="" width="20%">
+                        <p:commandButton value="Detalhes" action="#{beanAquisicoes.verDetalhes(x)}" update=":formLista"/>
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

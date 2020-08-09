@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/templates/basicoTemplate.xhtml">
+ 
+    <ui:define name="conteudo">
+        <h:form id="formSalva">
+            <p:outputLabel value="#{mensagem}" rendered="#{mensagem != null}"/>
+            <p:fieldset legend="Perfil do Usuário:">
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Nome:" for="nome"/>
+                    <p:inputText id="nome" maxlength="30" required="true" value="#{beanPerfil.nome}"/>
+                    <p:outputLabel value="Login:" for="login"/>
+                    <p:inputText id="login" maxlength="20" required="true" value="#{beanPerfil.login}"/>
+                    <p:commandButton value="Salvar" action="#{beanPerfil.alterarPerfil()}" process=":formSalva" update=":formSalva"/>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+        <h:form id="formAltera">
+            <p:fieldset legend="Alteração de Senha:">
+                <h:panelGrid columns="3">
+                    <p:outputLabel value="Nova Senha:" for="senha"/>
+                    <p:password id="senha" maxlength="15" required="true" value="#{beanPerfil.senha}" feedback="true" inline="true"/>
+                    <p:commandButton value="Salvar" action="#{beanPerfil.alterarSenha()}" process=":formAltera" update=":formAltera :formSalva"/>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

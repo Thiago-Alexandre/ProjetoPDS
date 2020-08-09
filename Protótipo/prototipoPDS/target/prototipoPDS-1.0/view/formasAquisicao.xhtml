@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/templates/basicoTemplate.xhtml">
+ 
+    <ui:define name="conteudo">
+        <h:form id="formSalva">
+            <p:outputLabel value="#{mensagem}" rendered="#{mensagem != null}"/>
+            <p:fieldset legend="Informações da Forma de Aquisição:">
+                <h:inputHidden value="#{beanFormaAquisicao.formaAquisicao.id}"/>
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Nome:" for="nome"/>
+                    <p:inputText id="nome" maxlength="30" required="true" value="#{beanFormaAquisicao.formaAquisicao.nome}"/>
+                    <p:commandButton value="Salvar" action="#{beanFormaAquisicao.salvar()}" process=":formSalva" update=":formSalva :formLista"/>
+                    <p:commandButton value="Novo" action="#{beanFormaAquisicao.limpar()}" process=":formSalva" update=":formSalva"/>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+        <h:form id="formFiltro">
+            <p:fieldset legend="Filtros:">
+                <h:panelGrid columns="3">
+                    <p:outputLabel value="Nome:" for="nomeConsulta"/>
+                    <p:inputText id="nomeConsulta" maxlength="30" value="#{beanFormaAquisicao.filtro.nome}"/>
+                    <p:commandButton value="Pesquisar" process=":formFiltro" update=":formLista"/>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+        <h:form id="formLista">
+            <p:fieldset legend="Formas de Aquisição Cadastradas:">
+                <p:dataTable id="formas" var="x" value="#{beanFormaAquisicao.formas}" rows="5" lazy="true" 
+                             paginator="true" emptyMessage="Nenhuma Forma de Aquisição Encontrada!">
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{x.nome}" />
+                    </p:column>
+                    <p:column headerText="" width="20%">
+                        <p:commandButton value="Alterar" action="#{beanFormaAquisicao.alterar(x)}" update=":formLista :formSalva"/>
+                    </p:column>
+                    <p:column headerText="" width="20%">
+                        <p:commandButton value="Remover" action="#{beanFormaAquisicao.excluir(x)}" update=":formLista :formSalva"/>
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

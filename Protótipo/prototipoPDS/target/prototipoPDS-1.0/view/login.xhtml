@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <h:head />
+    <h:body>
+        <header id="cabecalho">
+            <h2>Protótipo</h2>
+        </header>
+        
+        <main id="conteudo">
+            <h:form id="entrar">
+                <p:outputLabel value="#{mensagem}" rendered="#{mensagem != null}"/>
+                <p:fieldset legend="Login:">
+                    <h:panelGrid columns="2">
+                        <p:outputLabel value="Login:" for="login"/>
+                        <p:inputText id="login" maxlength="20" required="true" value="#{beanLogin.usuario.login}"/>
+                        <p:outputLabel value="Senha:" for="senha"/>
+                        <p:password id="senha" maxlength="15" required="true" value="#{beanLogin.usuario.senha}"/>
+                        <p:commandButton value="Entrar" action="#{beanLogin.efetuarLogin()}" process=":entrar" update=":entrar"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>    
+        </main>
+        <footer id="rodape">
+            <h3>Protótipo Sistema Patrimonial - Thiago Alexandre Buerger</h3>
+        </footer>
+    </h:body> 
+</html>

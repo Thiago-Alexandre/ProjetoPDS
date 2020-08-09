@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/templates/basicoTemplate.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+ 
+    <ui:define name="conteudo">
+        <h:form id="formSalva">
+            <p:outputLabel value="#{mensagem}" rendered="#{mensagem != null}"/>
+            <p:fieldset legend="Informações do Setor:">
+                <h:inputHidden value="#{beanSetor.setor.id}"/>
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Nome:" for="nome"/>
+                    <p:inputText id="nome" maxlength="30" required="true" value="#{beanSetor.setor.nome}"/>
+                    <p:outputLabel value="Filial:" for="filial"/>
+                    <p:selectOneMenu value="#{beanSetor.filial}" id="filial" required="true" filter="true" filterMatchMode="startsWith">
+                        <f:selectItems value="#{beanSetor.filiais}" var="filialSelecionada" itemLabel="#{filialSelecionada.nome}" itemValue="#{filialSelecionada.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Responsável pelo Setor:" for="responsavel"/>
+                    <p:selectOneMenu value="#{beanSetor.responsavel}" id="responsavel" required="true" filter="true" filterMatchMode="startsWith">
+                        <f:selectItems value="#{beanSetor.responsaveis}" var="responsavelSelecionado" itemLabel="#{responsavelSelecionado.nome}" itemValue="#{responsavelSelecionado.id}" />
+                    </p:selectOneMenu>
+                    <p:commandButton value="Salvar" action="#{beanSetor.salvar()}" process=":formSalva" update=":formSalva :formLista"/>
+                    <p:commandButton value="Novo" action="#{beanSetor.limpar()}" process=":formSalva" update=":formSalva"/>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+        <h:form id="formFiltro">
+            <p:fieldset legend="Filtros:">
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Nome:" for="nomeConsulta"/>
+                    <p:inputText id="nomeConsulta" maxlength="30" value="#{beanSetor.filtro.nome}"/>
+                    <p:outputLabel value="Por Filial:" for="filialFiltro"/>
+                    <p:selectOneMenu value="#{beanSetor.filtro.filial}" id="filialFiltro" filter="true" filterMatchMode="startsWith">
+                        <f:selectItems value="#{beanSetor.filiais}" var="filialFiltro" itemLabel="#{filialFiltro.nome}" itemValue="#{filialFiltro.id}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Por Responsável:" for="responsavelFiltro"/>
+                    <p:selectOneMenu value="#{beanSetor.filtro.responsavel}" id="responsavelFiltro" filter="true" filterMatchMode="startsWith">
+                        <f:selectItems value="#{beanSetor.responsaveis}" var="responsavelFiltro" itemLabel="#{responsavelFiltro.nome}" itemValue="#{responsavelFiltro.id}" />
+                    </p:selectOneMenu>
+                    <p:commandButton value="Pesquisar" process=":formFiltro" update=":formLista"/>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+        <h:form id="formLista">
+            <p:fieldset legend="Setores Cadastrados:">
+                <p:dataTable id="setores" var="x" value="#{beanSetor.setores}"  rows="5" lazy="true" 
+                             paginator="true" emptyMessage="Nenhum Setor Encontrado!">
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{x.nome}" />
+                    </p:column>
+                    <p:column headerText="Filial">
+                        <h:outputText value="#{x.filial.nome}" />
+                    </p:column>
+                    <p:column headerText="Responsável">
+                        <h:outputText value="#{x.responsavel.nome}" />
+                    </p:column>
+                    <p:column headerText="" width="20%">
+                        <p:commandButton value="Alterar" action="#{beanSetor.alterar(x)}" update=":formLista :formSalva"/>
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

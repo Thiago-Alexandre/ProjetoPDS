@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/templates/basicoTemplate.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+ 
+    <ui:define name="conteudo">
+        <h:form id="formSalva">
+            <p:outputLabel value="#{mensagem}" rendered="#{mensagem != null}"/>
+            <p:fieldset legend="Informações da Aquisição:">
+                <h:inputHidden value="#{beanAquisicao.aquisicao.id}"/>
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Data:" for="data"/>
+                    <p:calendar id="data" value="#{beanAquisicao.aquisicao.data}" pattern="yyyy-MM-dd" required="true" timeZone="GMT-3" mask="true">
+                        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="GMT-3"/>
+                    </p:calendar>
+                    <p:outputLabel for="forma" value="Forma de Aquisição:" />
+                    <p:selectOneMenu value="#{beanAquisicao.aquisicao.forma}" id="forma" filter="true" filterMatchMode="startsWith">
+                        <f:selectItems value="#{beanAquisicao.formas}" var="formaFiltro" itemLabel="#{formaFiltro.nome}" itemValue="#{formaFiltro.id}" />
+                    </p:selectOneMenu>
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Detalhes:" for="detalhes"/>
+                    <p:inputTextarea id="detalhes" required="true" value="#{beanAquisicao.aquisicao.detalhes}"
+                        rows="2" cols="40" counter="display" maxlength="100" counterTemplate="{0} caracteres restantes." autoResize="false"/>
+                    <h:outputText id="display" />
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Salvar" action="#{beanAquisicao.cadastrar()}" process=":formSalva" update=":formSalva"/>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+        <h:form id="formMaterial">
+            <p:fieldset legend="Adicionar Material:">
+                <h:panelGrid  columns="1">
+                    <p:commandButton value="Novo Material" action="#{beanAquisicao.adicionarMaterial()}" process=":formMaterial" update=":formLista :formSalva"/>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+        <h:form id="formLista">
+            <p:fieldset legend="Materiais:">
+                <p:dataTable id="materiais" var="x" value="#{beanAquisicao.aquisicao.materiais}"  rows="5" lazy="true" 
+                             paginator="true" emptyMessage="Nenhum Material Encontrado!">
+                    <p:column headerText="Especificação">
+                        <h:outputText value="#{x.especificacao.nome}" />
+                    </p:column>
+                    <p:column headerText="Marca">
+                        <h:outputText value="#{x.marca.nome}" />
+                    </p:column>
+                    <p:column headerText="Valor Aquisição">
+                        <h:outputText value="#{x.valorAquisicao}" />
+                    </p:column>
+                    <p:column headerText="Quantidade">
+                        <h:outputText value="#{x.quantidadeAquisicao}" />
+                    </p:column>
+                    <p:column headerText="" width="20%">
+                        <p:commandButton value="Detalhes" action="#{beanAquisicao.verMaterial(x)}" update=":formLista"/>
+                    </p:column>
+                    <p:column headerText="" width="20%">
+                        <p:commandButton value="Remover" action="#{beanAquisicao.removerMaterial(x)}" update=":formLista"/>
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

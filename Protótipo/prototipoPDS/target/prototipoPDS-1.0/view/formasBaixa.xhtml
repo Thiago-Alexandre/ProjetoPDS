@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/templates/basicoTemplate.xhtml">
+ 
+    <ui:define name="conteudo">
+        <h:form id="formSalva">
+            <p:outputLabel value="#{mensagem}" rendered="#{mensagem != null}"/>
+            <p:fieldset legend="Informações da Forma de Baixa:">
+                <h:inputHidden value="#{beanFormaBaixa.formaBaixa.id}"/>
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Nome:" for="nome"/>
+                    <p:inputText id="nome" maxlength="30" required="true" value="#{beanFormaBaixa.formaBaixa.nome}"/>
+                    <p:commandButton value="Salvar" action="#{beanFormaBaixa.salvar()}" process=":formSalva" update=":formSalva :formLista"/>
+                    <p:commandButton value="Novo" action="#{beanFormaBaixa.limpar()}" process=":formSalva" update=":formSalva"/>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+        <h:form id="formFiltro">
+            <p:fieldset legend="Filtros:">
+                <h:panelGrid columns="3">
+                    <p:outputLabel value="Nome:" for="nomeConsulta"/>
+                    <p:inputText id="nomeConsulta" maxlength="30" value="#{beanFormaBaixa.filtro.nome}"/>
+                    <p:commandButton value="Pesquisar" process=":formFiltro" update=":formLista"/>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+        <h:form id="formLista">
+            <p:fieldset legend="Formas de Baixa Cadastradas:">
+                <p:dataTable id="formas" var="x" value="#{beanFormaBaixa.formas}" rows="5" lazy="true" 
+                             paginator="true" emptyMessage="Nenhuma Forma de Baixa Encontrada!">
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{x.nome}" />
+                    </p:column>
+                    <p:column headerText="" width="20%">
+                        <p:commandButton value="Alterar" action="#{beanFormaBaixa.alterar(x)}" update=":formLista :formSalva"/>
+                    </p:column>
+                    <p:column headerText="" width="20%">
+                        <p:commandButton value="Remover" action="#{beanFormaBaixa.excluir(x)}" update=":formLista :formSalva"/>
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

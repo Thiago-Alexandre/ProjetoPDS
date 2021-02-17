@@ -1,0 +1,15 @@
+package com.pds.repository;
+
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import com.pds.model.Organizacao;
+
+@Repository
+public interface OrganizacaoRepository {
+
+	
+	public interface ContactRepository extends CrudRepository<Organizacao, Long> {
+		
+	}
+}

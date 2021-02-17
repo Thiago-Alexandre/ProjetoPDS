@@ -1,0 +1,34 @@
+package com.pds.dto;
+
+import com.pds.model.Funcionario;
+import com.pds.model.Organizacao;
+
+import lombok.Getter;
+
+/** 
+ * DTO de Funcionario a ser utilizado na resposta
+ */
+@Getter 			/** Cria os getters */
+public class FuncionarioResponseDTO {
+
+	private Long id;
+	private String nome;
+	private String email;
+	private Long organizacao;
+	
+	/** 
+	 * Método para gerar DTO com base no Funcionario
+	 * @param funcionario Funcionario
+	 * @return FuncionarioResponseDTO
+	 */
+	public static FuncionarioResponseDTO generationDTO(Funcionario funcionario) {
+        return new FuncionarioResponseDTO(funcionario.getId(), funcionario.getNome(),funcionario.getEmail(), funcionario.getOrganizacao());
+    }
+	
+	public FuncionarioResponseDTO(Long id, String nome, String email, Organizacao organizacao) {
+		this.id = id;
+		this.nome = nome;
+		this.email = email;
+		this.organizacao = organizacao.getId();
+	}
+}

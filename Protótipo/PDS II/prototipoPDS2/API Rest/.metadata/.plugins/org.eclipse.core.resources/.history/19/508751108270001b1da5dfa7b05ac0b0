@@ -1,0 +1,11 @@
+package com.pds.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.pds.model.Administrador;
+
+@Repository /** Interface de DAO utilizando os métodos prontos do JpaRepository */
+public interface AdministradorRepository extends JpaRepository<Administrador, Long>{
+
+}

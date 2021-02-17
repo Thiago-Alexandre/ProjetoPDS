@@ -1,0 +1,95 @@
+package com.pds.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.pds.dto.FilialResponseDTO;
+import com.pds.model.Filial;
+import com.pds.model.Organizacao;
+import com.pds.repository.FilialRepository;
+
+@Service		/** Classe fornecedora dos serviços de acesso ao repository. */
+public class FilialService {
+
+	private final FilialRepository filialRepository;
+	private final OrganizacaoService organizacaoService;
+
+	@Autowired		/** Injeção de dependências*/
+    public FilialService(FilialRepository filialRepository, OrganizacaoService organizacaoService) {
+        this.filialRepository = filialRepository;
+        this.organizacaoService = organizacaoService;
+    }
+
+	/**
+	 * Método para salvar uma nova filial.
+	 * Dados validados e em formato correspondente.
+	 * Verifica se a Organização que será vinculada a nova filial está salva no banco;
+	 * Se estiver, os dados da organização são vinculados na nova filial;
+	 * A filial é salva e retorna os dados salvos;
+	 * Se não estiver, retorna um objeto Filial vazio.
+	 * @param filial objeto Filial com os novos dados
+	 * @param idOrganizacao objeto Long refrente ao ID da Organização
+	 * @return objeto Filial com os dados salvos ou objeto Filial vazio
+	 */
+    public Filial salvar(Filial filial, Long idOrganizacao) {
+    	Organizacao organizacaoPesquisada = organizacaoService.pesquisar(idOrganizacao);
+		if(organizacaoPesquisada.getId() != null) {
+			filial.setOrganizacao(organizacaoPesquisada);
+			return filialRepository.save(filial);
+		}
+        return new Filial();
+    }
+    
+    /**
+     * Método para alterar os dados de uma filial
+     * Dados validados e em formato correspondente.
+     * Verifica se a filial que será alterada está salva no banco;
+     * Se estiver, recupera os dados da Organização vinculada;
+     * (a Organização vinculada à Filial não poderá ser alterada pelo cliente)
+     * Salva as alterações e retorna os dados salvos;
+     * Se não estiver, retorna um objeto Filial vazio.
+     * @param objeto Filial com os novos dados
+     * @return objeto Filial com os dados salvos ou objeto Filial vazio
+     */
+    public Filial alterar(Filial filial) {
+    	Optional<Filial> filialSaved = filialRepository.findById(filial.getId());
+        if(filialSaved.isPresent()) {
+        	filial.setOrganizacao(filialSaved.get().getOrganizacao());
+        	return filialRepository.save(filial);
+        } else {
+            return new Filial();
+        }
+    }
+    
+    /**
+     * Método para pesquisar uma filial.
+     * Verifica se a Filial está salva no banco;
+     * Se estiver, retorna os dados salvos;
+     * Se não estiver, retorna um objeto Filial vazio.
+     * @param objeto Long referente ao ID da filial pesquisada
+     * @return objeto DFilial com os dados salvos ou objeto Filial vazio
+     */
+    public Filial pesquisar(Long id) {
+    	Optional<Filial> filial = filialRepository.findById(id);
+        if(filial.isPresent()) {
+        	return filial.get();
+        } else {
+            return new Filial();
+        }
+    }
+    
+    /**
+     * Método para pesquisar filiais de determinada Organização.
+     * Verifica se existem Filiais com determinada Organização vinculada;
+     * Se sim, retorna uma lista com os dados salvos;
+     * Se não, retorna uma lista vazia.
+     * @param objeto Organizacao referente a Organização vinculada
+     * @return Lista de objetos Filial correspondentes a pesquisa ou Lista vazia
+     */
+    public List<FilialResponseDTO> listar(Organizacao organizacao) {
+    	return filialRepository.findByOrganizacao(organizacao);
+    }
+}

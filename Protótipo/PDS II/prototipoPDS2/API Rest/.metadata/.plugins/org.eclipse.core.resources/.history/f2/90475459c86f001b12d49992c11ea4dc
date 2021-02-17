@@ -1,0 +1,43 @@
+package com.pds.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor 					/** Cria um construtor vazio */
+@AllArgsConstructor 				/** Cria um construtor com todos os atributos */
+@Data 								/** Cria getters e setters */
+@Entity 							/** Mapeamento da Entidade */
+public class Usuario{
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(nullable=false, length=50)
+	private String login;
+	
+	@Column(nullable=false, length=50)
+	private String senha;
+	
+	@Column(nullable=false)
+	private Boolean estagiario;
+	
+	@Column(nullable=false)
+	private Boolean bloqueado;
+	
+	@OneToOne
+    @JoinColumn(referencedColumnName = "id", nullable=false)
+	private Funcionario funcionario;
+	
+	
+}

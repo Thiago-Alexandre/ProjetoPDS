@@ -1,0 +1,75 @@
+package com.pds.controller;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.pds.dto.OrganizacaoForSaveDTO;
+import com.pds.dto.OrganizacaoForUpdateDTO;
+import com.pds.dto.OrganizacaoResponseDTO;
+import com.pds.model.Organizacao;
+import com.pds.service.OrganizacaoService;
+
+@RequestMapping("/SistemaPatrimonial/organizacao")
+@RestController
+public class OrganizacaoController {
+
+	private final OrganizacaoService organizacaoService;
+
+	@Autowired
+    public OrganizacaoController(OrganizacaoService organizacaoService) {
+        this.organizacaoService = organizacaoService;
+    }
+	
+	@PostMapping
+    public ResponseEntity<OrganizacaoResponseDTO> salvar(@RequestBody @Valid OrganizacaoForSaveDTO dto) {
+        Organizacao organizacao = organizacaoService.salvar(dto.generationObject());
+        return new ResponseEntity<>(OrganizacaoResponseDTO.generationDTO(organizacao), HttpStatus.CREATED);
+    }
+	
+	@PutMapping(value="/{id}")
+	public ResponseEntity<OrganizacaoResponseDTO> alterar(@PathVariable("id") Long id, @RequestBody @Valid OrganizacaoForUpdateDTO dto) {
+		Organizacao organizacao = organizacaoService.alterar(id, dto.generationObject());
+        return new ResponseEntity<>(OrganizacaoResponseDTO.generationDTO(organizacao), HttpStatus.OK);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<OrganizacaoResponseDTO> pesquisar(@PathVariable Long id) {
+		Optional<Organizacao> organizacao = organizacaoService.pesquisar(id);
+        if(organizacao.isPresent()) {
+        	return new ResponseEntity<>(OrganizacaoResponseDTO.generationDTO(organizacao.get()), HttpStatus.OK);
+        } else {
+        	Organizacao organizacaoVazia = new Organizacao();
+            return new ResponseEntity<>(OrganizacaoResponseDTO.generationDTO(organizacaoVazia), HttpStatus.NOT_FOUND);
+        }
+	}
+	
+	@GetMapping()
+	public ResponseEntity<List<OrganizacaoResponseDTO>> listar() {
+		List<Organizacao> organizacoes = organizacaoService.listar();
+		List<OrganizacaoResponseDTO> lista = new ArrayList<OrganizacaoResponseDTO>();
+        if(organizacoes.isEmpty()) {
+            return new ResponseEntity<>(lista, HttpStatus.NOT_FOUND);
+        } else {
+        	Iterator<Organizacao> iterator = organizacoes.iterator();
+            while(iterator.hasNext()) {
+            	lista.add(OrganizacaoResponseDTO.generationDTO(iterator.next()));
+            }
+        	return new ResponseEntity<>(lista, HttpStatus.OK);
+        }
+	}
+}

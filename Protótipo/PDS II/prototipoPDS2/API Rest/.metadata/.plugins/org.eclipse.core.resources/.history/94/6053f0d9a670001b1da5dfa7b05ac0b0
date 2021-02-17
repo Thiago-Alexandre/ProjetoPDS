@@ -1,0 +1,27 @@
+package com.pds.dto;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+/**
+ * DTO de Usuario a ser utilizado para filtrar dados
+ * Usado para realizar a validação dos dados informados
+ */
+@AllArgsConstructor 	/** Cria um construtor com todos os atributos */
+@Data 					/** Cria getters e setters */
+public class UsuarioForSearch {
+
+	@NotNull(message = "ID do Funcionário é obrigatório!")
+	@Min(value = 1, message = "Não é permitido números negativos ou 0!")
+	private Long funcionario;
+	
+	@NotNull(message = "Valor de Acesso é obrigatório!")
+	private Boolean bloqueado;
+	
+	@NotNull(message = "Valor de Estagiário é obrigatório!")
+	private Boolean estagiario;
+	
+}

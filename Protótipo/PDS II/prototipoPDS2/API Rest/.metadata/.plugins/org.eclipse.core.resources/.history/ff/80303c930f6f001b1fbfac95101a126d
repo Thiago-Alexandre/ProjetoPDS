@@ -1,0 +1,5 @@
+package com.pds.util;
+
+public class ErrorResponse {
+
+}

@@ -1,0 +1,39 @@
+package com.pds.model;
+
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@Data
+@Entity
+public class Organizacao {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	private String nome;
+	
+	private Double valorPatrimonial;
+	
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+	private Date dataAtualizacaoValor;
+	
+	private Boolean bloqueado;
+	
+	public Organizacao(String nome, Double valor, Date data, Boolean bloqueado) {
+		this.nome = nome;
+		this.valorPatrimonial = valor;
+		this.dataAtualizacaoValor = data;
+		this.bloqueado = bloqueado;
+	}
+}

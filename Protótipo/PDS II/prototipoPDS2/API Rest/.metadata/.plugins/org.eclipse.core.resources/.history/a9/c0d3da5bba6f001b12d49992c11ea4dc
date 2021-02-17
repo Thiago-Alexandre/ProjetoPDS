@@ -1,0 +1,36 @@
+package com.pds.dto;
+
+import java.util.Date;
+
+import com.pds.model.Organizacao;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/** Cria um construtor privado com todos os atributos */
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+
+/** Cria os getters */
+@Getter
+
+/** DTO de Organização a ser utilizado na resposta
+ * Com isso, impede-se que dados indesejáveis sejam informados ao cliente
+ * Neste caso, estarão visíveis somente o id, o nome e se o acesso da organização está bloqueado
+ */
+public class OrganizacaoResponseDTO {
+
+	private Long id;
+	private String nome;
+	private Date dataAtualizacao;
+	private Double valorPatrimonial;
+	private Boolean bloqueado;
+	
+	/** Método para gerar DTO com base na Organização
+	 * @param Organizacao
+	 * @return OrganizacaoResponseDTO
+	 */
+	public static OrganizacaoResponseDTO generationDTO(Organizacao organizacao) {
+        return new OrganizacaoResponseDTO(organizacao.getId(), organizacao.getNome(),organizacao.getDataAtualizacaoValor(), organizacao.getValorPatrimonial(), organizacao.getBloqueado());
+    }
+}

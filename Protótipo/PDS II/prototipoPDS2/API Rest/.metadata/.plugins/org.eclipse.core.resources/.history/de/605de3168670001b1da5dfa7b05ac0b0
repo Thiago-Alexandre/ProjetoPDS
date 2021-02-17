@@ -1,0 +1,21 @@
+package com.pds.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.pds.dto.FuncionarioResponseDTO;
+import com.pds.model.Funcionario;
+import com.pds.model.Organizacao;
+
+@Repository /** Interface de DAO utilizando os métodos prontos do JpaRepository */
+public interface FuncionarioRepository extends JpaRepository<Funcionario, Long>{
+
+	/**	
+	 * Método para pesquisar todos os funcionarios de uma organização
+	 * @param Organizacao
+	 * @return List<Funcionario>
+	 */
+	public List<FuncionarioResponseDTO> findByOrganizacao(Organizacao organizacao);
+}

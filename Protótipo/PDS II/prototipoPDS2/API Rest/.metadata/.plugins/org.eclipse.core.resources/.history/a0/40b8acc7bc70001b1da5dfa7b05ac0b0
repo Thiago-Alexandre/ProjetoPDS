@@ -1,0 +1,29 @@
+package com.pds.dto;
+
+import com.pds.model.Usuario;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/** DTO de Administrador a ser utilizado na resposta */
+@AllArgsConstructor /** Cria um construtor com todos os atributos */
+@Getter /** Cria os getters */
+public class UsuarioResponseDTO {
+
+	private Long id;
+	private String nome;
+	private String email;
+	private String login;
+	private String senha;
+	private Boolean bloqueado;
+	private Boolean estagiario;
+	
+	/** 
+	 * Método para gerar DTO com base no Usuario
+	 * @param user Usuario
+	 * @return UsuarioResponseDTO
+	 */
+	public static UsuarioResponseDTO generationDTO(Usuario user) {
+        return new UsuarioResponseDTO(user.getId(), user.getFuncionario().getNome(), user.getFuncionario().getEmail(), user.getLogin(), user.getSenha(), user.getBloqueado(), user.getEstagiario());
+    }
+}

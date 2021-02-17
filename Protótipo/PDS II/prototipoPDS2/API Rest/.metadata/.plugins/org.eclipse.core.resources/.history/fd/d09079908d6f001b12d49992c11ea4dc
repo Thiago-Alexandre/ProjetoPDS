@@ -1,0 +1,36 @@
+package com.pds.dto;
+
+import java.util.Calendar;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.pds.model.Organizacao;
+
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+
+/** DTO de Organização a ser utilizado para salvar nova Organização
+ * Com isso, impede-se que dados indesejáveis sejam informados na hora de salvar no banco
+ * Usado também para realizar a validação dos dados informados
+ * Neste caso, somente o nome da organização deve ser informado
+ * Valor Patrimonial, Data de atualização e acesso bloqueado são informações pré definidas
+ */
+public class OrganizacaoForSaveDTO {
+
+	@NotNull(message = "Nome é obrigatório!")
+	@NotBlank(message = "Nome não pode ser vazio!")
+	@NotEmpty(message = "Nome não pode ser vazio!")
+	@Size(max = 100, message = "Tamanho máximo do nome é de 100 caracteres!")
+	private String nome;
+	
+	/** Método para gerar objeto Organização após ser validado o DTO
+	 * @return Organizacao
+	 */
+	public Organizacao generationObject() {
+		return new Organizacao(nome, 0.0, Calendar.getInstance().getTime(), false);
+	}
+}

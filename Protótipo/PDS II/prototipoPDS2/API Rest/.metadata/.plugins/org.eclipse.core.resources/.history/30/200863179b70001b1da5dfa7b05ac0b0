@@ -1,0 +1,19 @@
+package com.pds.repository;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.pds.dto.SetorResponseDTO;
+import com.pds.model.Filial;
+
+@Repository /** Interface de DAO utilizando os métodos prontos do JpaRepository */
+public interface SetorRepository {
+
+	/**	
+	 * Método para pesquisar todos os setores de uma filial
+	 * @param filial Filial
+	 * @return Lista de Setor
+	 */
+	public List<SetorResponseDTO> findByFilial(Filial filial);
+}

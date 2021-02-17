@@ -1,0 +1,50 @@
+package com.pds.service;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.pds.dto.OrganizacaoResponseDTO;
+import com.pds.model.Organizacao;
+import com.pds.repository.OrganizacaoRepository;
+
+@Service
+public class OrganizacaoService {
+
+	private final OrganizacaoRepository organizacaoRepository;
+
+	@Autowired
+    public OrganizacaoService(OrganizacaoRepository organizacaoRepository) {
+        this.organizacaoRepository = organizacaoRepository;
+    }
+
+    public Organizacao salvar(Organizacao organizacao) {
+        return organizacaoRepository.save(organizacao);
+    }
+    
+    public Organizacao alterar(Organizacao organizacao) {
+    	Optional<Organizacao> organizacaoSaved = organizacaoRepository.findById(organizacao.getId());
+        if(organizacaoSaved.isPresent()) {
+        	return organizacaoRepository.save(organizacao);
+        } else {
+            return new Organizacao();
+        }
+    }
+    
+    public Organizacao pesquisar(Long id) {
+    	Optional<Organizacao> organizacao = organizacaoRepository.findById(id);
+        if(organizacao.isPresent()) {
+        	return organizacao.get();
+        } else {
+            return new Organizacao();
+        }
+    }
+    
+    public List<OrganizacaoResponseDTO> listar(Boolean bloqueado) {
+    	return organizacaoRepository.findByBloqueado(bloqueado);
+    }
+}

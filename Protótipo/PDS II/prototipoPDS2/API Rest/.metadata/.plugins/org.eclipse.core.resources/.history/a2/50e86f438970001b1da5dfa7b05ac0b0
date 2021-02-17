@@ -1,0 +1,23 @@
+package com.pds.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.pds.dto.FilialResponseDTO;
+import com.pds.model.Organizacao;
+
+@Repository /** Interface de DAO utilizando os métodos prontos do JpaRepository */
+public interface UsuarioRepository {
+
+	/**	
+	 * Método para pesquisar todos os usuarios de uma organização.
+	 * Filtrando por acesso bloqueado ou não e se é estagiário ou não.
+	 * @param organizacao Organizacao
+	 * @return Lista de Filial
+	 */
+	@Query("select u.id, f.nome, f.email, u.login, u.bloqueado from Usuario u inner join u.funcionario f where f.organizacao = :organizacao")
+	public List<UsuarioResponseDTO> findByOrganizacao(@Param("organizacao") Organizacao organizacao, @Param("bloqueado") Boolean bloqueado, @Param("estagiario") Boolean estagiario);
+}

@@ -1,0 +1,5 @@
+package com.pds.dto;
+
+public class UsuarioForSearch {
+
+}

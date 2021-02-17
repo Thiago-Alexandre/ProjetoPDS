@@ -1,0 +1,32 @@
+package com.pds.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.pds.model.Organizacao;
+import com.pds.repository.OrganizacaoRepository;
+
+@Service
+public class OrganizacaoService {
+
+	private final OrganizacaoRepository organizacaoRepository;
+
+	@Autowired
+    public OrganizacaoService(OrganizacaoRepository organizacaoRepository) {
+        this.organizacaoRepository = organizacaoRepository;
+    }
+
+    public Organizacao salvar(Organizacao organizacao) {
+        return organizacaoRepository.save(organizacao);
+    }
+    
+    public Organizacao alterar(Long id, Organizacao organizacao) {
+        return organizacaoRepository.save(organizacao);
+    }
+    
+    public Optional<Organizacao> pesquisar(Long id) {
+        return organizacaoRepository.findById(id);
+    }
+}

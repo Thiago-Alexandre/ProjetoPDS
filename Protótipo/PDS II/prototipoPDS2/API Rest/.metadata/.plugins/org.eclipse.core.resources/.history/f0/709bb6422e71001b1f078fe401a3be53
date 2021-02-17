@@ -1,0 +1,20 @@
+package com.pds.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.pds.dto.AdministradorResponseDTO;
+import com.pds.model.Administrador;
+
+@Repository /** Interface de DAO utilizando os métodos prontos do JpaRepository */
+public interface AdministradorRepository extends JpaRepository<Administrador, Long>{
+
+	/**	
+	 * Método para pesquisar todos os administradores com acesso bloqueado ou não
+	 * @param bloqueado Boolean
+	 * @return Lista de Administrador
+	 */
+	public List<AdministradorResponseDTO> findByBloqueado(Boolean bloqueado);
+}

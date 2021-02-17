@@ -1,0 +1,49 @@
+package com.pds.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.pds.dto.FuncionarioResponseDTO;
+import com.pds.model.Funcionario;
+import com.pds.model.Organizacao;
+import com.pds.repository.FuncionarioRepository;
+
+@Service
+public class FuncionarioService {
+
+	private final FuncionarioRepository funcionarioRepository;
+
+	@Autowired
+    public FuncionarioService(FuncionarioRepository funcionarioRepository) {
+        this.funcionarioRepository = funcionarioRepository;
+    }
+
+    public Funcionario salvar(Funcionario funcionario) {
+        return funcionarioRepository.save(funcionario);
+    }
+    
+    public Funcionario alterar(Funcionario funcionario) {
+    	Optional<Funcionario> funcionarioSaved = funcionarioRepository.findById(funcionario.getId());
+        if(funcionarioSaved.isPresent()) {
+        	return funcionarioRepository.save(funcionario);
+        } else {
+            return new Funcionario();
+        }
+    }
+    
+    public Funcionario pesquisar(Long id) {
+    	Optional<Funcionario> funcionario = funcionarioRepository.findById(id);
+        if(funcionario.isPresent()) {
+        	return funcionario.get();
+        } else {
+            return new Funcionario();
+        }
+    }
+    
+    public List<FuncionarioResponseDTO> listar(Organizacao organizacao) {
+    	return funcionarioRepository.findByOrganizacao(organizacao);
+    }
+}

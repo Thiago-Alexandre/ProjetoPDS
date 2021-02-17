@@ -1,0 +1,98 @@
+package com.pds.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.pds.dto.AdministradorResponseDTO;
+import com.pds.model.Administrador;
+import com.pds.repository.AdministradorRepository;
+
+@Service		/** Classe fornecedora dos serviços de acesso ao repository. */
+public class AdministradorService {
+
+	private final AdministradorRepository administradorRepository;
+
+	@Autowired		/** Injeção de dependências*/
+    public AdministradorService(AdministradorRepository administradorRepository) {
+        this.administradorRepository = administradorRepository;
+    }
+
+	/**
+	 * Método para salvar um novo Administrador.
+	 * Dados validados e em formato correspondente.
+	 * @param administrador Administrador
+	 * @return Administrador
+	 */
+    public Administrador salvar(Administrador administrador) {
+        return administradorRepository.save(administrador);
+    }
+    
+    /**
+     * Método para alterar um administrador.
+     * Dados validados e em formato correspondente.
+     * Verifica se o Administrador que será alterado está salvo no banco;
+     * Se estiver, salva as alterações e retorna os dados salvos;
+     * Se não estiver, retorna um objeto Administrador vazio.
+     * @param administrador Administrador
+     * @return Administrador
+     */
+    public Administrador alterar(Administrador administrador) {
+    	Optional<Administrador> administradorSaved = administradorRepository.findById(administrador.getId());
+        if(administradorSaved.isPresent()) {
+        	return administradorRepository.save(administrador);
+        } else {
+            return new Administrador();
+        }
+    }
+    
+    /**
+     * Método para pesquisar um administrador.
+     * Verifica se o Administrador está salvo no banco;
+     * Se estiver, retorna os dados salvos;
+     * Se não estiver, retorna um objeto Administrador vazio.
+     * @param id Long
+     * @return Administrador
+     */
+    public Administrador pesquisar(Long id) {
+    	Optional<Administrador> administrador = administradorRepository.findById(id);
+        if(administrador.isPresent()) {
+        	return administrador.get();
+        } else {
+            return new Administrador();
+        }
+    }
+    
+    /**
+     * Método para pesquisar Administrador,
+     * verificando se existe um Usuario que possua login e senha compatíveis com os pesquisados. 
+     * Se sim, retorna o Administrador com os dados salvos;
+     * Se não, retorna um Administrador vazio.
+     * @param login String
+     * @param senha String
+     * @return AdministradorResponseDTO
+     */
+    public AdministradorResponseDTO pesquisar(String login, String senha) {
+    	Administrador admin = new Administrador();
+    	AdministradorResponseDTO resposta = AdministradorResponseDTO.generationDTO(admin);
+    	Optional<Administrador> adminSaved = administradorRepository.findByLoginSenha(login, senha);
+		if(!adminSaved.isEmpty()) {
+			resposta = AdministradorResponseDTO.generationDTO(adminSaved.get());
+        }
+		return resposta;
+    }
+    
+    /**
+     * Método para pesquisar administradores com determinado acesso, 
+     * verificando se existem Administradores com determinado acesso.
+     * Se sim, retorna uma lista com os dados salvos.
+     * Se não, retorna uma lista vazia.
+     * @param bloqueado Boolean
+     * @return List<AdministradorResponseDTO>
+     */
+    public List<AdministradorResponseDTO> listar(Boolean bloqueado) {
+    	return administradorRepository.findByBloqueado(bloqueado);
+    }
+}

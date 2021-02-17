@@ -1,0 +1,24 @@
+package com.pds.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor 		/** Cria um construtor vazio */
+@AllArgsConstructor 	/** Cria um construtor com todos os atributos */
+@Data 					/** Cria getters e setters */
+@Entity 				/** Mapeamento da Entidade */
+public class Usuario extends Funcionario{
+
+	@Column(nullable=false, length=50)
+	private String login;
+	
+	@Column(nullable=false, length=50)
+	private String senha;
+	
+	@Column(nullable=false)
+	private Boolean estagiario;
+}

@@ -1,0 +1,84 @@
+package com.pds.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.pds.dto.AdministradorResponseDTO;
+import com.pds.model.Administrador;
+import com.pds.repository.AdministradorRepository;
+
+@Service		/** Classe fornecedora dos serviços de acesso ao repository. */
+public class AdministradorService {
+
+	private final AdministradorRepository administradorRepository;
+
+	@Autowired		/** Injeção de dependências*/
+    public AdministradorService(AdministradorRepository administradorRepository) {
+        this.administradorRepository = administradorRepository;
+    }
+
+	/**
+	 * Método para salvar um novo Administrador.
+	 * Dados validados e em formato correspondente.
+	 * @param objeto Administrador com os novos dados
+	 * @return objeto Administrador com os dados salvos
+	 */
+    public Administrador salvar(Administrador administrador) {
+        return AdministradorRepository.save(administrador);
+    }
+    
+    /**
+     * Método para alterar uma organização.
+     * Dados validados e em formato correspondente.
+     * Verifica se a Organização que será alterada está salva no banco;
+     * Se estiver, recupera os dados de Valor Patrimonial e Data de Atualização do valor salvos;
+     * (esses dados não poderão ser alterados pelo cliente, pois serão alterados pelo sistema)
+     * Salva as alterações e retorna os dados salvos;
+     * Se não estiver, retorna um objeto Administrador vazio.
+     * @param objeto Administrador com os novos dados
+     * @return objeto Administrador com os dados salvos ou objeto Administrador vazio
+     */
+    public Administrador alterar(Administrador Administrador) {
+    	Optional<Administrador> AdministradorSaved = AdministradorRepository.findById(Administrador.getId());
+        if(AdministradorSaved.isPresent()) {
+        	Administrador.setDataAtualizacaoValor(AdministradorSaved.get().getDataAtualizacaoValor());
+        	Administrador.setValorPatrimonial(AdministradorSaved.get().getValorPatrimonial());
+        	return AdministradorRepository.save(Administrador);
+        } else {
+            return new Administrador();
+        }
+    }
+    
+    /**
+     * Método para pesquisar uma organização.
+     * Verifica se a Organização está salva no banco;
+     * Se estiver, retorna os dados salvos;
+     * Se não estiver, retorna um objeto Administrador vazio.
+     * @param objeto Long referente ao ID da organização pesquisada
+     * @return objeto Administrador com os dados salvos ou objeto Administrador vazio
+     */
+    public Administrador pesquisar(Long id) {
+    	Optional<Administrador> Administrador = AdministradorRepository.findById(id);
+        if(Administrador.isPresent()) {
+        	return Administrador.get();
+        } else {
+            return new Administrador();
+        }
+    }
+    
+    /**
+     * Método para pesquisar organizações com determinado acesso.
+     * Verifica se existem Organizações com determinado acesso;
+     * Se sim, retorna uma lista com os dados salvos;
+     * Se não, retorna uma lista vazia.
+     * @param objeto Boolean referente ao acesso estar bloqueado ou não
+     * @return Lista de objetos AdministradorResponseDTO correspondentes a pesquisa ou Lista vazia
+     */
+    public List<AdministradorResponseDTO> listar(Boolean bloqueado) {
+    	return AdministradorRepository.findByBloqueado(bloqueado);
+    }
+}

@@ -1,0 +1,73 @@
+package com.pds.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor 					/** Cria um construtor vazio */
+@AllArgsConstructor 				/** Cria um construtor com todos os atributos */
+@Data 								/** Cria getters e setters */
+@Entity 							/** Mapeamento da Entidade */
+public class Usuario{
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(nullable=false, length=50)
+	private String login;
+	
+	@Column(nullable=false, length=50)
+	private String senha;
+	
+	@Column(nullable=false)
+	private Boolean bloqueado;
+	
+	@Column(nullable=false)
+	private Boolean estagiario;
+	
+	@OneToOne
+    @JoinColumn(referencedColumnName = "id", nullable=false)
+	private Funcionario funcionario;
+	
+	/** 
+	 * Construtor utilizado para salvar um novo usuario
+	 * @param login String
+	 * @param senha String
+	 * @param estagiario Boolean
+	 * @param bloqueado Boolean
+	 * @param funcionario Funcionario
+	 */
+	public Usuario(String login, String senha, Boolean bloqueado, Boolean estagiario, Funcionario funcionario) {
+		this.login = login;
+		this.senha = senha;
+		this.bloqueado = bloqueado;
+		this.estagiario = estagiario;
+		this.funcionario = funcionario;
+	}
+	
+	/** 
+	 * Construtor utilizado para alterar um usuario
+	 * Neste caso, não é possível alterar o funcionario de um usuario
+	 * @param id Long
+	 * @param login String
+	 * @param senha String
+	 * @param bloqueado Boolean
+	 * @param estagiario Boolean
+	 */
+	public Usuario(Long id, String login, String senha, Boolean bloqueado, Boolean estagiario) {
+		this.id = id;
+		this.login = login;
+		this.senha = senha;
+		this.bloqueado = bloqueado;
+		this.estagiario = estagiario;
+	}
+}

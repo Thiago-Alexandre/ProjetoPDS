@@ -1,0 +1,57 @@
+package com.pds.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.pds.dto.FilialResponseDTO;
+import com.pds.model.Filial;
+import com.pds.model.Organizacao;
+import com.pds.repository.FilialRepository;
+
+@Service
+public class FilialService {
+
+	private final FilialRepository filialRepository;
+	private final OrganizacaoService organizacaoService;
+
+	@Autowired
+    public FilialService(FilialRepository filialRepository, OrganizacaoService organizacaoService) {
+        this.filialRepository = filialRepository;
+        this.organizacaoService = organizacaoService;
+    }
+
+    public Filial salvar(Filial filial, Long idOrganizacao) {
+    	Organizacao organizacaoPesquisada = organizacaoService.pesquisar(idOrganizacao);
+		if(organizacaoPesquisada.getId() != null) {
+			filial.setOrganizacao(organizacaoPesquisada);
+			return filialRepository.save(filial);
+		}
+        return new Filial();
+    }
+    
+    public Filial alterar(Filial filial) {
+    	Optional<Filial> filialSaved = filialRepository.findById(filial.getId());
+        if(filialSaved.isPresent()) {
+        	filial.setOrganizacao(filialSaved.get().getOrganizacao());
+        	return filialRepository.save(filial);
+        } else {
+            return new Filial();
+        }
+    }
+    
+    public Filial pesquisar(Long id) {
+    	Optional<Filial> filial = filialRepository.findById(id);
+        if(filial.isPresent()) {
+        	return filial.get();
+        } else {
+            return new Filial();
+        }
+    }
+    
+    public List<FilialResponseDTO> listar(Organizacao organizacao) {
+    	return filialRepository.findByOrganizacao(organizacao);
+    }
+}

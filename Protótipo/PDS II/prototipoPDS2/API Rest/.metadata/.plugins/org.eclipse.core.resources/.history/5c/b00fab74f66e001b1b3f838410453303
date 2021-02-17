@@ -1,0 +1,22 @@
+package com.pds.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.pds.model.Organizacao;
+import com.pds.repository.OrganizacaoRepository;
+
+@Service
+public class OrganizacaoService {
+
+	private final OrganizacaoRepository organizacaoRepository;
+
+    @Autowired
+    public OrganizacaoService(OrganizacaoRepository organizacaoRepository) {
+        this.organizacaoRepository = organizacaoRepository;
+    }
+
+    public Organizacao salvar(Organizacao organizacao) {
+        return organizacaoRepository.save(organizacao);
+    }
+}

@@ -1,0 +1,137 @@
+package com.pds.service;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.pds.dto.UsuarioResponseDTO;
+import com.pds.model.Usuario;
+import com.pds.model.Funcionario;
+import com.pds.model.Organizacao;
+import com.pds.repository.UsuarioRepository;
+
+@Service		/** Classe fornecedora dos serviços de acesso ao repository. */
+public class UsuarioService {
+
+	private final UsuarioRepository usuarioRepository;
+	private final FuncionarioService funcionarioService;
+	private final OrganizacaoService organizacaoService;
+
+	@Autowired		/** Injeção de dependências*/
+    public UsuarioService(UsuarioRepository usuarioRepository, FuncionarioService funcionarioService, OrganizacaoService organizacaoService) {
+        this.usuarioRepository = usuarioRepository;
+        this.funcionarioService = funcionarioService;
+        this.organizacaoService = organizacaoService;
+    }
+
+	/**
+	 * Método para salvar um novo usuário.
+	 * Dados validados e em formato correspondente.
+	 * Verifica se o Funcionário que será vinculada ao novo usuário está salva no banco;
+	 * Se estiver, os dados do funcionário são vinculados no novo Usuario;
+	 * O Usuario é salvo e retorna os dados salvos;
+	 * Se não estiver, retorna um objeto Usuario vazio.
+	 * @param usuario Usuario
+	 * @param idFuncionario Long
+	 * @return Usuario
+	 */
+    public Usuario salvar(Usuario usuario, Long idFuncionario) {
+    	Funcionario funcionarioPesquisada = funcionarioService.pesquisar(idFuncionario);
+		if(funcionarioPesquisada.getId() != null) {
+			usuario.setFuncionario(funcionarioPesquisada);
+			return usuarioRepository.save(usuario);
+		}
+        return new Usuario();
+    }
+    
+    /**
+     * Método para alterar os dados de um Usuario.
+     * Dados validados e em formato correspondente.
+     * Verifica se o Usuario que será alterado está salvo no banco;
+     * Se estiver, recupera os dados do Funcionario vinculado;
+     * (o Funcionario vinculado ao Usuario não poderá ser alterada pelo cliente)
+     * Salva as alterações e retorna os dados salvos;
+     * Se não estiver, retorna um objeto Usuario vazio.
+     * @param usuario Usuario
+     * @return Usuario
+     */
+    public Usuario alterar(Usuario usuario) {
+    	Optional<Usuario> usuarioSaved = usuarioRepository.findById(usuario.getId());
+        if(usuarioSaved.isPresent()) {
+        	usuario.setFuncionario(usuarioSaved.get().getFuncionario());
+        	return usuarioRepository.save(usuario);
+        } else {
+            return new Usuario();
+        }
+    }
+    
+    /**
+     * Método para pesquisar um Usuario.
+     * Verifica se o Usuario está salvo no banco;
+     * Se estiver, retorna os dados salvos;
+     * Se não estiver, retorna um objeto Usuario vazio.
+     * @param id Long
+     * @return Usuario
+     */
+    public Usuario pesquisar(Long id) {
+    	Optional<Usuario> usuario = usuarioRepository.findById(id);
+        if(usuario.isPresent()) {
+        	return usuario.get();
+        } else {
+            return new Usuario();
+        }
+    }
+    
+    /**
+     * Método para pesquisar Usuario de determinada Organização, 
+     * verificando se existe um Usuario em determinada Organização 
+     * que possua login e senha compatíveis com os pesquisados. 
+     * Se sim, retorna o Usuario com os dados salvos;
+     * Se não, retorna um Usuario vazio.
+     * @param organizacao Long
+     * @param login String
+     * @param senha String
+     * @return UsuarioResponseDTO
+     */
+    public UsuarioResponseDTO pesquisar(Long organizacao, String login, String senha) {
+    	Organizacao organizacaoPesquisada = organizacaoService.pesquisar(organizacao);
+    	Usuario usuario = new Usuario();
+    	UsuarioResponseDTO resposta = UsuarioResponseDTO.generationDTO(usuario);
+    	if(organizacaoPesquisada.getId() != null) {
+    		Optional<Usuario> usuarioSaved = usuarioRepository.findByLoginSenha(organizacaoPesquisada, login, senha);
+			if(!usuarioSaved.isEmpty()) {
+				resposta = UsuarioResponseDTO.generationDTO(usuarioSaved.get());
+	        }
+		}
+		return resposta;
+    }
+    
+    /**
+     * Método para pesquisar Usuarios de determinada Organização.
+     * Verifica se existem Usuarios com determinada Organização vinculada.
+     * Se sim, retorna uma lista com os dados salvos;
+     * Se não, retorna uma lista vazia.
+     * @param organizacao Organizacao
+     * @param bloqueado Boolean
+     * @param estagiario Boolean
+     * @return List<UsuarioResponseDTO>
+     */
+    public List<UsuarioResponseDTO> listar(Long organizacao, Boolean bloqueado, Boolean estagiario) {
+    	Organizacao organizacaoPesquisada = organizacaoService.pesquisar(organizacao);
+    	List<UsuarioResponseDTO> lista = new ArrayList<UsuarioResponseDTO>();
+    	if(organizacaoPesquisada.getId() != null) {
+			List<Usuario> usuarios = usuarioRepository.findByOrganizacao(organizacaoPesquisada, bloqueado, estagiario);
+			if(!usuarios.isEmpty()) {
+				Iterator<Usuario> iterator = usuarios.iterator();
+				while(iterator.hasNext()) {
+					lista.add(UsuarioResponseDTO.generationDTO(iterator.next()));
+				}
+	        }
+		}
+		return lista;
+    }
+}

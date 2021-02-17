@@ -1,0 +1,99 @@
+package com.pds.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.pds.dto.AdministradorResponseDTO;
+import com.pds.model.Administrador;
+
+@Service		/** Classe fornecedora dos serviços de acesso ao repository. */
+public class AdministradorService {
+
+	private final AdministradorRepository administradorRepository;
+
+	@Autowired		/** Injeção de dependências*/
+    public AdministradorService(AdministradorRepository administradorRepository) {
+        this.administradorRepository = administradorRepository;
+    }
+
+	/**
+	 * Método para salvar um novo funcionário.
+	 * Dados validados e em formato correspondente.
+	 * Verifica se a Organização que será vinculada ao novo funcionário está salva no banco;
+	 * Se estiver, os dados da organização são vinculados no novo Administrador;
+	 * O Administrador é salvo e retorna os dados salvos;
+	 * Se não estiver, retorna um objeto Administrador vazio.
+	 * @param Administrador objeto Administrador com os novos dados
+	 * @param idOrganizacao objeto Long referente ao ID da Organização
+	 * @return objeto Administrador com os dados salvos ou objeto Administrador vazio
+	 */
+    public Administrador salvar(Administrador Administrador, Long idOrganizacao) {
+    	Organizacao organizacaoPesquisada = organizacaoService.pesquisar(idOrganizacao);
+		if(organizacaoPesquisada.getId() != null) {
+			Administrador.setOrganizacao(organizacaoPesquisada);
+			return AdministradorRepository.save(Administrador);
+		}
+        return new Administrador();
+    }
+    
+    /**
+     * Método para alterar os dados de um Administrador
+     * Dados validados e em formato correspondente.
+     * Verifica se o Administrador que será alterado está salvo no banco;
+     * Se estiver, recupera os dados da Organização vinculada;
+     * (a Organização vinculada ao Administrador não poderá ser alterada pelo cliente)
+     * Salva as alterações e retorna os dados salvos;
+     * Se não estiver, retorna um objeto Administrador vazio.
+     * @param filial objeto Filial com os novos dados
+     * @return objeto Filial com os dados salvos ou objeto Filial vazio
+     */
+    public Administrador alterar(Administrador Administrador) {
+    	Optional<Administrador> AdministradorSaved = AdministradorRepository.findById(Administrador.getId());
+        if(AdministradorSaved.isPresent()) {
+        	Administrador.setOrganizacao(AdministradorSaved.get().getOrganizacao());
+        	return AdministradorRepository.save(Administrador);
+        } else {
+            return new Administrador();
+        }
+    }
+    
+    /**
+     * Método para pesquisar um Administrador.
+     * Verifica se o Administrador está salvo no banco;
+     * Se estiver, retorna os dados salvos;
+     * Se não estiver, retorna um objeto Administrador vazio.
+     * @param id objeto Long referente ao ID do Administrador pesquisado
+     * @return objeto Administrador com os dados salvos ou objeto Administrador vazio
+     */
+    public Administrador pesquisar(Long id) {
+    	Optional<Administrador> Administrador = AdministradorRepository.findById(id);
+        if(Administrador.isPresent()) {
+        	return Administrador.get();
+        } else {
+            return new Administrador();
+        }
+    }
+    
+    /**
+     * Método para pesquisar Administradors de determinada Organização.
+     * Verifica se existem Administradors com determinada Organização vinculada;
+     * Se sim, retorna uma lista com os dados salvos;
+     * Se não, retorna uma lista vazia.
+     * @param organizacao objeto Organizacao referente a Organização vinculada
+     * @return Lista de objetos AdministradorsResponseDTO correspondentes a pesquisa ou Lista vazia
+     */
+    public List<AdministradorResponseDTO> listar(Long organizacao) {
+    	Organizacao organizacaoPesquisada = organizacaoService.pesquisar(organizacao);
+    	if(organizacaoPesquisada.getId() != null) {
+			List<AdministradorResponseDTO> filiais = AdministradorRepository.findByOrganizacao(organizacaoPesquisada);
+			if(!filiais.isEmpty()) {
+	            return filiais;
+	        }
+		}
+		return new ArrayList<AdministradorResponseDTO>() ;
+    }
+}

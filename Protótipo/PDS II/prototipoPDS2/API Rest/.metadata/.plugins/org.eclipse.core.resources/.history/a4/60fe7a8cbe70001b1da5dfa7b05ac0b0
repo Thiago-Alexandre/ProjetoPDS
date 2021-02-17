@@ -1,0 +1,67 @@
+package com.pds.controller;
+
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.pds.dto.SetorForSaveDTO;
+import com.pds.dto.SetorForUpdateDTO;
+import com.pds.dto.SetorResponseDTO;
+import com.pds.model.Setor;
+import com.pds.service.SetorService;
+
+@RequestMapping("/SistemaPatrimonial")
+@RestController
+public class SetorController {
+
+	private final SetorService setorService;
+
+	@Autowired		/** Injeção de dependências*/
+    public SetorController(SetorService setorService) {
+        this.setorService = setorService;
+    }
+	
+	@PostMapping(value="/setor")
+    public ResponseEntity<SetorResponseDTO> salvar(@RequestBody @Valid SetorForSaveDTO dto) {
+        Setor setor = setorService.salvar(dto.generationObject(), dto.getFilial(), dto.getResponsavel());
+        return new ResponseEntity<>(SetorResponseDTO.generationDTO(setor), HttpStatus.CREATED);
+    }
+	
+	@PutMapping(value="/Setor")
+	public ResponseEntity<SetorResponseDTO> alterar(@RequestBody @Valid SetorForUpdateDTO dto) {
+		Setor setor = setorService.alterar(dto.generationObject());
+		if(setor.getId() != null) {
+        	return new ResponseEntity<>(SetorResponseDTO.generationDTO(setor), HttpStatus.OK);
+        }
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
+	@GetMapping(value="/setor/{id}")
+	public ResponseEntity<SetorResponseDTO> pesquisar(@PathVariable Long id) {
+		Setor setor = setorService.pesquisar(id);
+        if(setor.getId() != null) {
+        	return new ResponseEntity<>(SetorResponseDTO.generationDTO(setor), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
+	@GetMapping(value="/setores/{id_filial}")
+	public ResponseEntity<List<SetorResponseDTO>> listar(@PathVariable Long id_filial) {
+		List<SetorResponseDTO> setores = setorService.listar(id_filial);
+		if(setores.isEmpty()) {
+			return new ResponseEntity<>(setores, HttpStatus.NOT_FOUND);
+	    }
+		return new ResponseEntity<>(setores, HttpStatus.OK);
+	}
+}

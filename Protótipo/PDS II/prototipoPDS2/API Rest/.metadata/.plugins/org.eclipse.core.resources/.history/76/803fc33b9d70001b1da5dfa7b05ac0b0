@@ -1,0 +1,103 @@
+package com.pds.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.pds.dto.SetorResponseDTO;
+import com.pds.model.Setor;
+import com.pds.model.Filial;
+import com.pds.repository.SetorRepository;
+
+@Service		/** Classe fornecedora dos serviços de acesso ao repository. */
+public class SetorService {
+
+	private final SetorRepository SetorRepository;
+	private final FilialService FilialService;
+
+	@Autowired		/** Injeção de dependências*/
+    public SetorService(SetorRepository setorRepository, FilialService filialService) {
+        this.SetorRepository = setorRepository;
+        this.FilialService = filialService;
+    }
+
+	/**
+	 * Método para salvar uma nova Setor.
+	 * Dados validados e em formato correspondente.
+	 * Verifica se a Organização que será vinculada a nova Setor está salva no banco;
+	 * Se estiver, os dados da organização são vinculados na nova Setor;
+	 * A Setor é salva e retorna os dados salvos;
+	 * Se não estiver, retorna um objeto Setor vazio.
+	 * @param Setor objeto Setor com os novos dados
+	 * @param idFilial objeto Long referente ao ID da Organização
+	 * @return objeto Setor com os dados salvos ou objeto Setor vazio
+	 */
+    public Setor salvar(Setor setor, Long idFilial) {
+    	Filial filialPesquisada = filialService.pesquisar(idFilial);
+		if(filialPesquisada.getId() != null) {
+			setor.setFilial(filialPesquisada);
+			return SetorRepository.save(setor);
+		}
+        return new Setor();
+    }
+    
+    /**
+     * Método para alterar os dados de uma Setor
+     * Dados validados e em formato correspondente.
+     * Verifica se a Setor que será alterada está salva no banco;
+     * Se estiver, recupera os dados da Organização vinculada;
+     * (a Organização vinculada à Setor não poderá ser alterada pelo cliente)
+     * Salva as alterações e retorna os dados salvos;
+     * Se não estiver, retorna um objeto Setor vazio.
+     * @param Setor objeto Setor com os novos dados
+     * @return objeto Setor com os dados salvos ou objeto Setor vazio
+     */
+    public Setor alterar(Setor Setor) {
+    	Optional<Setor> SetorSaved = SetorRepository.findById(Setor.getId());
+        if(SetorSaved.isPresent()) {
+        	Setor.setFilial(SetorSaved.get().getFilial());
+        	return SetorRepository.save(Setor);
+        } else {
+            return new Setor();
+        }
+    }
+    
+    /**
+     * Método para pesquisar uma Setor.
+     * Verifica se a Setor está salva no banco;
+     * Se estiver, retorna os dados salvos;
+     * Se não estiver, retorna um objeto Setor vazio.
+     * @param id objeto Long referente ao ID da Setor pesquisada
+     * @return objeto Setor com os dados salvos ou objeto Setor vazio
+     */
+    public Setor pesquisar(Long id) {
+    	Optional<Setor> Setor = SetorRepository.findById(id);
+        if(Setor.isPresent()) {
+        	return Setor.get();
+        } else {
+            return new Setor();
+        }
+    }
+    
+    /**
+     * Método para pesquisar filiais de determinada Organização.
+     * Verifica se existem Filiais com determinada Organização vinculada;
+     * Se sim, retorna uma lista com os dados salvos;
+     * Se não, retorna uma lista vazia.
+     * @param Filial objeto Filial referente a Organização vinculada
+     * @return Lista de objetos SetorResponseDTO correspondentes a pesquisa ou Lista vazia
+     */
+    public List<SetorResponseDTO> listar(Long Filial) {
+    	Filial FilialPesquisada = FilialService.pesquisar(Filial);
+    	if(FilialPesquisada.getId() != null) {
+			List<SetorResponseDTO> filiais = SetorRepository.findByFilial(FilialPesquisada);
+			if(!filiais.isEmpty()) {
+	            return filiais;
+	        }
+		}
+		return new ArrayList<SetorResponseDTO>() ;
+    }
+}

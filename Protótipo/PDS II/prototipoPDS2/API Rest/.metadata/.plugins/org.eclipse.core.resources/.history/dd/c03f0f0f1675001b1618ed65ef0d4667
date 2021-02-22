@@ -1,0 +1,38 @@
+package com.pds.repository;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.pds.dto.OrganizacaoForSaveDTO;
+import com.pds.dto.OrganizacaoForUpdateDTO;
+import com.pds.model.Organizacao;
+
+class OrganizacaoRepositoryTest {
+
+	@Autowired
+    private OrganizacaoRepository repository;
+	
+	@Test
+    public void testeOrganizacao() {
+		OrganizacaoForSaveDTO dto = new OrganizacaoForSaveDTO();
+		dto.setNome("organizacao_teste");
+		Organizacao organizacaoGerada = gerarOrganizacao(dto);
+        repository.save(organizacaoGerada);
+        List<Organizacao> organizacoesSalvas = repository.findAll();
+        assertEquals(1, organizacoesSalvas.size());
+        Organizacao organizacaoSalva = organizacoesSalvas.get(0);
+        assertEquals(organizacaoGerada, organizacaoSalva);
+    }
+	
+	private Organizacao gerarOrganizacao(OrganizacaoForSaveDTO dto) {
+		return dto.generationObject();
+	}
+
+	private Organizacao alterarOrganizacao(OrganizacaoForUpdateDTO dto) {
+		return dto.generationObject();
+	}
+}

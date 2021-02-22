@@ -1,0 +1,6 @@
+package com.pds.model;
+
+public interface Custo {
+
+	public Double calcularCusto();
+}

@@ -1,0 +1,11 @@
+package com.pds.model;
+
+public class Manutencao implements CalculoCusto {
+
+	@Override
+	public Double calcularCusto() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

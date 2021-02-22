@@ -11,8 +11,6 @@ import com.pds.model.Organizacao;
 
 import lombok.Data;
 
-@Data /** Cria getters e setters */
-
 /** 
  * DTO de Organização a ser utilizado para salvar nova Organização
  * Com isso, impede-se que dados indesejáveis sejam informados na hora de salvar no banco
@@ -20,6 +18,7 @@ import lombok.Data;
  * Valor Patrimonial, Data de atualização e acesso bloqueado são informações pré definidas
  * Usado também para realizar a validação dos dados informados
  */
+@Data /** Cria getters e setters */
 public class OrganizacaoForSaveDTO {
 
 	@NotNull(message = "Nome é obrigatório!")

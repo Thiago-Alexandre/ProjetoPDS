@@ -1,0 +1,5 @@
+package com.pds.model;
+
+public abstract class ManutencaoDecorator extends ItemPermanente{
+
+}

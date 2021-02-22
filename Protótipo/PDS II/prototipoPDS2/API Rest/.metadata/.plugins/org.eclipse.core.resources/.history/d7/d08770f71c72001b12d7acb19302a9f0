@@ -1,0 +1,28 @@
+package com.pds.model;
+
+public class ItemConsumo extends Material {
+
+	public ItemConsumo(
+			Long id, 
+			String descricao, 
+			Double valorUnitarioEntrada, 
+			Double quantidadeEntrada,
+			Double valorResidual, 
+			Integer vidaUtil, 
+			Double producaoEstimada, 
+			Double producaoAtual,
+			Depreciacao tipoDepreciacao
+	) {
+		super(
+				id, 
+				descricao, 
+				valorUnitarioEntrada, 
+				quantidadeEntrada, 
+				valorResidual, 
+				vidaUtil, 
+				producaoEstimada, 
+				producaoAtual,
+				tipoDepreciacao
+		);
+	}
+}

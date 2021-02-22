@@ -1,0 +1,11 @@
+package com.pds.model;
+
+public class ItemPermanente extends Material {
+
+	@Override
+	public Double valorCusto() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

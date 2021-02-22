@@ -1,0 +1,11 @@
+package com.pds.model;
+
+public class DepreciacaoMensalLinear implements DepreciacaoStrategy {
+
+	@Override
+	public Double calcularDepreciacao(Material material) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

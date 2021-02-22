@@ -1,0 +1,11 @@
+package com.pds.model;
+
+public class Aquisicao extends Entrada {
+
+	@Override
+	public Double calcularCusto() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

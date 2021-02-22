@@ -1,0 +1,41 @@
+package com.pds.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper=true)
+@Data 								/** Cria getters e setters */
+@Entity 							/** Mapeamento da Entidade */
+public class ItemConsumo extends Material {
+
+	@Column(nullable=false)
+	private Double quantidadeAtual;
+	
+	public ItemConsumo(
+			Long id, 
+			String descricao, 
+			Double valorUnitarioEntrada, 
+			Double quantidadeEntrada,
+			Double valorResidual, 
+			Integer vidaUtil, 
+			Double producaoEstimada, 
+			Double producaoAtual,
+			Double quantidadeAtual
+	) {
+		super(
+				id, 
+				descricao, 
+				valorUnitarioEntrada, 
+				quantidadeEntrada, 
+				valorResidual, 
+				vidaUtil, 
+				producaoEstimada, 
+				producaoAtual,
+				Depreciacao.DN
+		);
+		this.quantidadeAtual = quantidadeAtual;
+	}
+}

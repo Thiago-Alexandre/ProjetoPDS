@@ -1,0 +1,6 @@
+package com.pds.model;
+
+public interface DepreciacaoStrategy {
+
+	public Double calcularDepreciacao(Material material);
+}

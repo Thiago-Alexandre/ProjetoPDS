@@ -1,0 +1,36 @@
+package com.pds.repository;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Calendar;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.pds.dto.OrganizacaoForSaveDTO;
+import com.pds.dto.OrganizacaoForUpdateDTO;
+import com.pds.model.Organizacao;
+
+class OrganizacaoRepositoryTest {
+
+	@Autowired
+    private OrganizacaoRepository repository;
+	
+	@Test
+    public void testeOrganizacao() {
+		Organizacao organizacaoTeste1 = new Organizacao("teste1", 0.0, Calendar.getInstance().getTime(), false);
+		Organizacao organizacaoTeste2 = new Organizacao("teste2", 0.0, Calendar.getInstance().getTime(), true);
+        repository.save(organizacaoTeste1);
+        repository.save(organizacaoTeste2);
+        List<Organizacao> organizacoesSalvas = repository.findAll();
+        assertEquals(2, organizacoesSalvas.size());
+        Organizacao organizacaoSalva1 = organizacoesSalvas.get(0);
+        Organizacao organizacaoSalva2 = organizacoesSalvas.get(1);
+        assertEquals(organizacaoTeste1, organizacaoSalva1);
+        assertEquals(organizacaoTeste2, organizacaoSalva2);
+        assertEquals(1, repository.findByBloqueado(false).size());
+        assertEquals(1, repository.findByBloqueado(true).size());
+        Organizacao organizacaoAlterada = 
+    }
+}

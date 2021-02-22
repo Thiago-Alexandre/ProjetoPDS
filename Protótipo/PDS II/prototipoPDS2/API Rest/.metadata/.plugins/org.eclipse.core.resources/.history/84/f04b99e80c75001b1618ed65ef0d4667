@@ -1,0 +1,37 @@
+package com.pds.model;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+
+import lombok.Getter;
+
+@MappedSuperclass
+@Getter
+public abstract class Entrada {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(nullable=false, length=100)
+	private String fornecedor;
+	
+	/** Configura o Date para ser compatível com o banco de dados */
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+	@Column(nullable=false)
+	private Date dataEntrada;
+	
+	@OneToMany(mappedBy = "entrada")
+	private List<Material> itens = new ArrayList<>();
+	
+	public abstract Double calcularCusto();
+}

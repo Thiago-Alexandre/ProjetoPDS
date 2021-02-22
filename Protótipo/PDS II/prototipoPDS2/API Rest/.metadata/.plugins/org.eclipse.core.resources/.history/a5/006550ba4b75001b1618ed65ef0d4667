@@ -1,0 +1,5 @@
+package com.pds.model;
+
+public class Categoria {
+
+}

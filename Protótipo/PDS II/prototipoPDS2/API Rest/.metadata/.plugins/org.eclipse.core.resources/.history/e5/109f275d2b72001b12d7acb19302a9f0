@@ -1,0 +1,43 @@
+package com.pds.model;
+
+import javax.persistence.Column;
+
+public class ItemPermanente extends Material {
+
+	@Column(nullable=true, length=50)
+	private String tombamento;
+	
+	public ItemPermanente(
+			Long id, 
+			String descricao, 
+			Double valorUnitarioEntrada, 
+			Double quantidadeEntrada,
+			Double quantidadeAtual,
+			Double valorResidual, 
+			Integer vidaUtil, 
+			Double producaoEstimada, 
+			Double producaoAtual,
+			Depreciacao depreciacao,
+			String tombamento
+	) {
+		super(
+				id, 
+				descricao, 
+				valorUnitarioEntrada, 
+				quantidadeEntrada, 
+				quantidadeAtual,
+				valorResidual, 
+				vidaUtil, 
+				producaoEstimada, 
+				producaoAtual,
+				depreciacao
+		);
+		this.tombamento = tombamento;
+	}
+
+	@Override
+	public Double valorCusto() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

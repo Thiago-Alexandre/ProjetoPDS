@@ -1,0 +1,9 @@
+package com.pds.model;
+
+public class Doacao extends Entrada {
+
+	@Override
+	public Double calcularCusto() {
+		return 0.0;
+	}
+}
